@@ -120,7 +120,7 @@ void password_functions::load_details() {
   vault.clear();
   std::ifstream file("samp.DAT");
   if (!file) {
-    std::cerr << "error loading details";
+    std::ofstream create("samp.DAT");
     return;
   }
   std::string site;
