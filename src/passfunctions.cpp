@@ -205,6 +205,7 @@ void password_functions::edit_details() {
   std::string new_username;
   std::string new_password;
   int op;
+  char option;
   cout << "enter the site you wanna edit: ";
   std::getline(cin, sitesearch);
 
@@ -218,8 +219,9 @@ void password_functions::edit_details() {
 selection:
   cout << "what do you wanna update \n 1.site \n 2.username \n"
           "3.password\nselect option 1 2 3: ";
-  cin >> op;
+  cin >> option;
   cin.ignore();
+  op = option - '0';
 
   if (op == 1) {
     cout << "enter the updated site: ";
@@ -248,7 +250,7 @@ selection:
 }
 
 int password_functions::site_index(const std::string site) {
-
+  int count = 0;
   std::vector<int> match;
   for (int i = 0; i < vault.size(); ++i) {
     if (vault[i].getsite() == site) {
@@ -263,10 +265,20 @@ int password_functions::site_index(const std::string site) {
   }
   for (int i = 0; i < match.size(); ++i) {
     cout << i + 1 << ". " << vault[match[i]].getUsername() << '\n';
+    count += i + 1;
   }
+selection:
   int choice;
+  char option;
   cout << "Select user account: ";
-  cin >> choice;
+
+  cin >> option;
+  cin.ignore();
+  choice = option - '0';
+  if (choice >= count) {
+    cout << "invalid option \n\n";
+    goto selection;
+  }
 
   return match[choice - 1];
 }

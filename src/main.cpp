@@ -50,10 +50,16 @@ int main(int argc, char *argv[]) {
       } else if (command == "changemasterkey") {
 
         passfunction.choice_direction(direction, [&]() { change_masterkey(); });
+      } else if (command == "add") {
+        passfunction.choice_direction(direction,
+                                      [&]() { passfunction.add_details(); });
+
+      } else {
+        cout << "invalid command";
       }
 
     } else {
-      cout << "invalid command";
+      cout << "invalid command\n";
     }
   }
 }
