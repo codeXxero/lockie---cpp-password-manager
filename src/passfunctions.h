@@ -1,6 +1,6 @@
 #ifndef PASSFUNCTIONS_H
 #define PASSFUNCTIONS_H
-#include "Details.h"
+#include "details.h"
 #include <iostream>
 #include <sodium.h>
 #include <string>
