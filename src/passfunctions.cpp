@@ -14,7 +14,8 @@ void password_functions::search_CLI(std::string site) {
   load_details();
   int index = site_index(site);
   if (index == -1) {
-    cout << "site not found:(";
+    cout << "site not found:(\n";
+    return;
   }
   cout << "Site: " << vault[index].getsite() << '\n';
 
@@ -27,7 +28,7 @@ void password_functions::delete_CLI(std::string site) {
   load_details();
   int index = site_index(site);
   if (index == -1) {
-    cout << "site not found:(";
+    cout << "site not found:(\n";
     return;
   }
 
@@ -73,7 +74,7 @@ selection:
     vault[index].setPassword(new_password);
 
   } else {
-    cout << "enter a valid option duhh\n\n";
+    cout << "enter a valid option :<\n\n";
     goto selection;
   }
 
@@ -86,7 +87,7 @@ void password_functions::save_details() {
 
   std::ofstream file{"samp.DAT"};
   if (!file) {
-    std::cerr << "error saving details";
+    std::cerr << "error saving details\n";
     return;
   }
   std::string site;
@@ -166,7 +167,7 @@ void password_functions::delete_det() {
   std::getline(cin, search);
   int index = site_index(search);
   if (index == -1) {
-    cout << "site not found:(";
+    cout << "site not found:(\n";
     return;
   }
 
