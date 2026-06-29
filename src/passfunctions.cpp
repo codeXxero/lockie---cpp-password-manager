@@ -7,9 +7,6 @@
 #include <string>
 #include <vector>
 
-// ─── Key Derivation
-// ───────────────────────────────────────────────────────────
-
 void password_functions::saveSalt() {
   std::ofstream file("salt.dat", std::ios::binary | std::ios::trunc);
   if (!file)
@@ -37,9 +34,6 @@ void password_functions::deriveKey(const std::string &masterpassword) {
           crypto_pwhash_MEMLIMIT_INTERACTIVE, crypto_pwhash_ALG_DEFAULT) != 0)
     throw std::runtime_error("Key derivation failed (out of memory)");
 }
-
-// ─── Save / Load
-// ──────────────────────────────────────────────────────────────
 
 void password_functions::save_details() {
   if (vault.empty()) {
@@ -88,9 +82,6 @@ void password_functions::load_details() {
          std::getline(ss, password))
     vault.push_back(Details(site, username, password));
 }
-
-// ─── CRUD
-// ─────────────────────────────────────────────────────────────────────
 
 void password_functions::add_details() {
   std::string site, username, password;
@@ -208,9 +199,6 @@ selection:
   cout << "edited successfully\n\n";
 }
 
-// ─── CLI Variants
-// ─────────────────────────────────────────────────────────────
-
 void password_functions::add_CLI(std::string site, std::string username,
                                  std::string password) {
   vault.push_back(Details(site, username, password));
@@ -276,9 +264,6 @@ selection:
   cout << "edited successfully\n\n";
 }
 
-// ─── Menu
-// ─────────────────────────────────────────────────────────────────────
-
 void password_functions::menu_driven() {
   while (1) {
     char option;
@@ -315,9 +300,6 @@ void password_functions::menu_driven() {
   }
 }
 
-// ─── site_index
-// ───────────────────────────────────────────────────────────────
-
 int password_functions::site_index(const std::string site) {
   std::vector<int> match;
   for (int i = 0; i < (int)vault.size(); ++i)
@@ -345,9 +327,6 @@ selection:
   }
   return match[choice - 1];
 }
-
-// ─── Master Key (hashed)
-// ──────────────────────────────────────────────────────
 
 void set_masterkey() {
   std::ofstream file("key.txt");
