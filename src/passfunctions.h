@@ -1,56 +1,31 @@
 #ifndef PASSFUNCTIONS_H
 #define PASSFUNCTIONS_H
-
-#include <fstream>
+#include "Details.h"
 #include <iostream>
+#include <sodium.h>
 #include <string>
 #include <vector>
-using std::cin;
-using std::cout;
 
-class Details {
-private:
-  std::string m_site;
-  std::string m_username;
-  std::string m_password;
-
-public:
-  Details(const std::string &site, const std::string &username,
-          const std::string &password)
-      : m_site(site), m_username(username), m_password(password) {}
-  const std::string &getsite() const { return m_site; }
-  const std::string &getUsername() const { return m_username; }
-  const std::string &getPassword() const { return m_password; }
-  void setSite(const std::string &site) { m_site = site; }
-  void setUsername(const std::string &username) { m_username = username; }
-  void setPassword(const std::string &password) { m_password = password; }
-};
+using namespace std;
 
 class password_functions {
 private:
   std::vector<Details> vault;
+  std::string derived_key;
+  unsigned char salt[crypto_pwhash_SALTBYTES];
 
 public:
-  void add_CLI(const std::string site, const std::string username,
-               const std::string password);
-  void search_CLI(const std::string site);
-  void delete_CLI(const std::string site);
-  template <typename T> void choice_direction(int direction, T func) {
-    if (direction == 0) {
+  void deriveKey(const std::string &masterpassword);
+  void loadSalt();
+  void saveSalt();
 
-      func();
-      return;
-    }
-    if (direction == 2) {
-      return;
-    } else {
-      cout << "wrong masterkey :3\n";
-    }
+  template <typename Func> void choice_direction(int direction, Func action) {
+    if (direction == 0)
+      action();
+    else if (direction == 1)
+      std::cout << "Wrong master key. Access denied.\n";
   }
-  void menu_driven();
-  void edit_CLI(std::string site);
-  int site_index(const std::string site);
-  void save_details();
+
   void add_details();
   void load_details();
   void search_details();
@@ -58,11 +33,23 @@ public:
   void delete_det();
   void delete_all();
   void edit_details();
+  void menu_driven();
+  void save_details();
+
+  void add_CLI(std::string site, std::string username, std::string password);
+  void search_CLI(std::string site);
+  void delete_CLI(std::string site);
+  void edit_CLI(std::string site);
+
+  int site_index(const std::string site);
 };
+
+// ─── Master key functions
+// ─────────────────────────────────────────────────────
 void set_masterkey();
 std::string readKey_file();
-int verify_masterkey(const std::string &storedKey, const std::string &userKey);
-
-int verify_entry();
+int verify_masterkey(const std::string &storedHash, const std::string &userKey);
+int verify_entry(std::string &userKeyOut); // returns direction, outputs raw key
 void change_masterkey();
+
 #endif

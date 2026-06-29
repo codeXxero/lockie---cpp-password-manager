@@ -1,65 +1,59 @@
 #include "passfunctions.h"
-
 #include <iostream>
 #include <string>
 
 using std::cout;
+
 int main(int argc, char *argv[]) {
+  if (sodium_init() < 0) {
+    cout << "Failed to initialize libsodium\n";
+    return 1;
+  }
 
+  std::string userKey;
+  int direction = verify_entry(userKey); // userKey is filled on success
+
+  if (direction == 2)
+    return 0; // first run, restart needed
+  if (direction == 1) {
+    cout << "Wrong master key. Access denied.\n";
+    return 1;
+  }
+
+  // direction == 0: authenticated
   password_functions passfunction;
-  passfunction.load_details();
-
-  int direction = verify_entry();
+  passfunction.deriveKey(userKey); // derive 32-byte encryption key
+  passfunction.load_details();     // decrypt and load vault
 
   if (argc == 1) {
-    passfunction.choice_direction(direction,
-                                  [&]() { passfunction.menu_driven(); });
+    passfunction.menu_driven();
   } else {
-
     std::string command = argv[1];
+
     if (argc == 5 && command == "add") {
-
-      passfunction.choice_direction(direction, [&]() {
-        passfunction.add_CLI(argv[2], argv[3], argv[4]);
-      });
-    }
-
-    else if (argc == 3) {
-      if (command == "search") {
-        passfunction.choice_direction(
-            direction, [&]() { passfunction.search_CLI(argv[2]); });
-      } else if (command == "delete") {
-
-        passfunction.choice_direction(
-            direction, [&]() { passfunction.delete_CLI(argv[2]); });
-      } else if (command == "edit") {
-        passfunction.choice_direction(
-            direction, [&]() { passfunction.edit_CLI(argv[2]); });
-      } else {
-        cout << "invalid command";
-      }
+      passfunction.add_CLI(argv[2], argv[3], argv[4]);
+    } else if (argc == 3) {
+      if (command == "search")
+        passfunction.search_CLI(argv[2]);
+      else if (command == "delete")
+        passfunction.delete_CLI(argv[2]);
+      else if (command == "edit")
+        passfunction.edit_CLI(argv[2]);
+      else
+        cout << "invalid command\n";
     } else if (argc == 2) {
-
-      if (command == "clearall") {
-
-        passfunction.choice_direction(direction,
-                                      [&]() { passfunction.delete_all(); });
-      } else if (command == "listall") {
-        passfunction.choice_direction(direction,
-                                      [&]() { passfunction.show_all(); });
-      } else if (command == "changemasterkey") {
-
-        passfunction.choice_direction(direction, [&]() { change_masterkey(); });
-      } else if (command == "add") {
-        passfunction.choice_direction(direction,
-                                      [&]() { passfunction.add_details(); });
-
-      } else {
-        cout << "invalid command";
-      }
-
+      if (command == "clearall")
+        passfunction.delete_all();
+      else if (command == "listall")
+        passfunction.show_all();
+      else if (command == "changemasterkey")
+        change_masterkey();
+      else
+        cout << "invalid command\n";
     } else {
       cout << "invalid command\n";
     }
   }
+
+  return 0;
 }
