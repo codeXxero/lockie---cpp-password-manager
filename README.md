@@ -156,20 +156,29 @@ lockie
 
 # Usage
 
+There is a menu driven approach or direct command approach which will do the task directly without entering menu.
+Users can use it whatever way they are comfortable
+
+## open menu
+
+just enter
+
 ```
 lockie
 ```
 
-## Available commands:
+and you will enter the menu mode
 
-| Command            | Description                |
-| ------------------ | -------------------------- |
-| `add`              | Add a new password entry   |
-| `search <website>` | Search for a website       |
-| `edit`             | Modify an existing entry   |
-| `delete <website>` | Delete a specific entry    |
-| `clearall`         | Delete every stored entry  |
-| `listall`          | Display every stored entry |
+## Command mode
+
+| Commands                                                     | Description                |
+| ------------------------------------------------------------ | -------------------------- |
+| `lockie add <website> <username> <password>` or `lockie add` | Add a new password entry   |
+| `lockie search <website>`                                    | Search for a website       |
+| `lockie edit <website>`                                      | Modify an existing entry   |
+| `lockie delete <website>`                                    | Delete a specific entry    |
+| `lockie clearall`                                            | Delete every stored entry  |
+| `lockie listall`                                             | Display every stored entry |
 
 ## add website
 
