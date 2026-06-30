@@ -1,6 +1,7 @@
 #include "passfunctions.h"
 #include <fstream>
 #include <iostream>
+#include <sodium.h>
 #include <string>
 #include <vector>
 void password_functions::add_CLI(std::string site, std::string username,
@@ -284,7 +285,7 @@ selection:
   return match[choice - 1];
 }
 void set_masterkey() {
-  std::ofstream file("key.txt");
+  std::ofstream file("key.DAT");
 
   if (!file) {
     std::cerr << "Error creating masterkey file\n";
@@ -297,8 +298,15 @@ void set_masterkey() {
   std::cout << "Set a master key: ";
 
   std::getline(std::cin, masterkey);
+  char hashed[crypto_pwhash_STRBYTES];
+  if (crypto_pwhash_str(hashed, masterkey.c_str(), masterkey.size(),
+                        crypto_pwhash_OPSLIMIT_INTERACTIVE,
+                        crypto_pwhash_MEMLIMIT_INTERACTIVE) != 0) {
+    std::cerr << "Hashing failed (out of memory)\n";
+    return;
+  }
 
-  file << masterkey;
+  file << hashed;
 }
 
 std::string readKey_file() {
@@ -308,14 +316,18 @@ std::string readKey_file() {
     return "file empty";
   }
 
-  std::string storedKey;
-  std::getline(file, storedKey);
+  std::string stored_hashKey;
+  std::getline(file, stored_hashKey);
 
-  return storedKey;
+  return stored_hashKey;
 }
 
-int verify_masterkey(const std::string &storedKey, const std::string &userKey) {
-  return storedKey == userKey ? 0 : 1;
+int verify_masterkey(const std::string &storedHash,
+                     const std::string &userKey) {
+  return crypto_pwhash_str_verify(storedHash.c_str(), userKey.c_str(),
+                                  userKey.size()) == 0
+             ? 0
+             : 1;
 }
 
 int verify_entry() {
@@ -332,9 +344,41 @@ int verify_entry() {
   std::cout << "Enter master key: ";
   std::getline(std::cin, userKey);
   cout << '\n';
-  std::string storedKey = readKey_file();
+  std::string stored_hashKey = readKey_file();
 
-  return verify_masterkey(storedKey, userKey);
+  return verify_masterkey(stored_hashKey, userKey);
+}
+
+void change_masterkey() {
+
+  std::string oldKey;
+  std::cout << "Enter current master key: ";
+  std::getline(std::cin, oldKey);
+
+  if (verify_masterkey(readKey_file(), oldKey) != 0) {
+    std::cout << "Wrong master key:3, Cannot change.\n";
+    return;
+  }
+
+  std::string newKey;
+  std::cout << "Enter new master key: ";
+  std::getline(std::cin, newKey);
+
+  char hashed[crypto_pwhash_STRBYTES];
+  if (crypto_pwhash_str(hashed, newKey.c_str(), newKey.size(),
+                        crypto_pwhash_OPSLIMIT_INTERACTIVE,
+                        crypto_pwhash_MEMLIMIT_INTERACTIVE) != 0) {
+    std::cerr << "Hashing failed (out of memory)\n";
+    return;
+  }
+
+  std::ofstream file("key.txt", std::ios::trunc);
+  if (!file) {
+    std::cerr << "Error opening masterkey file\n";
+    return;
+  }
+  file << hashed;
+  std::cout << "Master key changed successfully.\n";
 }
 void password_functions::menu_driven() {
 
@@ -374,18 +418,4 @@ void password_functions::menu_driven() {
       cout << "invalid option duh\n";
     }
   }
-}
-void change_masterkey() {
-  std::ofstream file("key.txt");
-
-  if (!file) {
-    std::cerr << "Error loading masterkey file\n";
-    return;
-  }
-  std::string masterkey;
-  cout << "enter new masterkey: ";
-
-  std::getline(std::cin, masterkey);
-
-  file << masterkey;
 }
