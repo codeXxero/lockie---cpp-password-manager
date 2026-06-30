@@ -34,9 +34,9 @@ An experimental branch that adds encryption using **libsodium**
 - Encrypted password database
 - Improved security over the `main` branch
 
-#### AI Assistance
+##### AI Assistance
 
-The encryption implementation was built with the help of AI for learning `libsodium`, understanding cryptographic concepts, and debugging. The project architecture and integration were implemented by me.
+The encryption implementation was built with the help of AI. The project architecture and integration were implemented by me.
 
 # Dependencies
 
