@@ -1,6 +1,6 @@
 # Lockie – A Simple C++ Password Manager
 
-A lightweight command-line password manager built in C++ for learning file handling, data structures, and encryption.
+A lightweight command-line password manager built in C++ for linux.
 
 ---
 
@@ -20,25 +20,23 @@ The stable version of Lockie.
 - Delete individual entries
 - Delete all entries
 - Plain text storage
-- Easy to understand source code
-
-Recommended if you want to learn how the password manager works internally.
+- Master key authentication
+- Hashed masterkey
 
 ---
 
 ### `encryption`
 
-An experimental branch that adds encryption using **libsodium**.
+An experimental branch that adds encryption using **libsodium**
 
 **Additional Features**
 
 - Encrypted password database
-- Master key authentication
 - Improved security over the `main` branch
 
-Recommended if you want a more secure version or wish to study encryption in C++.
+#### AI Assistance
 
----
+The encryption implementation was built with the help of AI for learning `libsodium`, understanding cryptographic concepts, and debugging. The project architecture and integration were implemented by me.
 
 # Dependencies
 
@@ -154,9 +152,9 @@ lockie
 
 ---
 
-# Usage
+# How to use:
 
-There is a menu driven approach or direct command approach which will do the task directly without entering menu.
+There is a menu driven approach or direct command approach.
 Users can use it whatever way they are comfortable
 
 ## open menu
@@ -179,42 +177,6 @@ and you will enter the menu mode
 | `lockie delete <website>`                                    | Delete a specific entry    |
 | `lockie clearall`                                            | Delete every stored entry  |
 | `lockie listall`                                             | Display every stored entry |
-
-## add website
-
-```bash
-lockie add <website> <username> <password>
-```
-
-or
-
-```bash
-lockie add
-```
-
-### search website
-
-```bash
-lockie search <webiste name>
-```
-
-### delete website
-
-```bash
-lockie delete <webiste name>
-```
-
-### displaying all entries
-
-```bash
-lockie listall
-```
-
-### clear all entries
-
-```bash
-lockie clearall
-```
 
 ---
 
