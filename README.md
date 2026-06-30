@@ -40,54 +40,7 @@ Recommended if you want a more secure version or wish to study encryption in C++
 
 ---
 
-# Installation
-
-## Install the `main` branch
-
-Clone the repository:
-
-```bash
-git clone https://github.com/codeXxero/lockie---cpp-password-manager.git
-```
-
-Enter the project:
-
-```bash
-cd lockie---cpp-password-manager
-```
-
-Build:
-
-```bash
-mkdir build
-cd build
-cmake ..
-make
-```
-
-Run:
-
-```bash
-./main
-```
-
----
-
-## Install the `encryption` branch
-
-Clone the repository:
-
-```bash
-git clone -b encryption https://github.com/codeXxero/lockie---cpp-password-manager.git
-```
-
-Enter the project:
-
-```bash
-cd lockie---cpp-password-manager
-```
-
-Install libsodium if it is not already installed.
+# Dependencies
 
 ### Arch Linux
 
@@ -101,6 +54,58 @@ sudo pacman -S libsodium
 sudo apt install libsodium-dev
 ```
 
+### Fedora
+
+```bash
+sudo dnf install libsodium-devel
+```
+
+# Installation
+
+## one command installation
+
+### main
+
+```bash
+git clone https://github.com/codeXxero/lockie---cpp-password-manager.git
+cd lockie---cpp-password-manager
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+
+```
+
+### encryption
+
+```bash
+git clone -b encryption https://github.com/codeXxero/lockie---cpp-password-manager.git
+cd lockie---cpp-password-manager
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+
+```
+
+## Manual installation
+
+### Install the `main` branch
+
+Clone the repo:
+
+```bash
+git clone https://github.com/codeXxero/lockie---cpp-password-manager.git
+```
+
+enter the project:
+
+```bash
+cd lockie---cpp-password-manager
+```
+
 Build:
 
 ```bash
@@ -108,12 +113,43 @@ mkdir build
 cd build
 cmake ..
 make
+sudo make install
 ```
 
 Run:
 
 ```bash
-./main
+lockie
+```
+
+### Install the `encryption` branch
+
+Clone the repo:
+
+```bash
+git clone -b encryption https://github.com/codeXxero/lockie---cpp-password-manager.git
+```
+
+Enter the project:
+
+```bash
+cd lockie---cpp-password-manager
+```
+
+Build:
+
+```bash
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+```
+
+Run:
+
+```bash
+lockie
 ```
 
 ---
@@ -121,31 +157,54 @@ Run:
 # Usage
 
 ```
-./main
+lockie
 ```
 
-Available commands:
+## Available commands:
 
-| Command            | Description               |
-| ------------------ | ------------------------- |
-| `add`              | Add a new password entry  |
-| `search <website>` | Search for a website      |
-| `edit`             | Modify an existing entry  |
-| `delete <website>` | Delete a specific entry   |
-| `delete_all`       | Delete every stored entry |
-| `help`             | Show available commands   |
-| `exit`             | Save changes and quit     |
+| Command            | Description                |
+| ------------------ | -------------------------- |
+| `add`              | Add a new password entry   |
+| `search <website>` | Search for a website       |
+| `edit`             | Modify an existing entry   |
+| `delete <website>` | Delete a specific entry    |
+| `clearall`         | Delete every stored entry  |
+| `listall`          | Display every stored entry |
 
-Example:
+## add website
 
 ```bash
-./main
+lockie add <website> <username> <password>
+```
 
-> add
-> search github
-> delete github
-> delete_all
-> exit
+or
+
+```bash
+lockie add
+```
+
+### search website
+
+```bash
+lockie search <webiste name>
+```
+
+### delete website
+
+```bash
+lockie delete <webiste name>
+```
+
+### displaying all entries
+
+```bash
+lockie listall
+```
+
+### clear all entries
+
+```bash
+lockie clearall
 ```
 
 ---
