@@ -267,7 +267,7 @@ selection:
 void password_functions::menu_driven() {
   while (1) {
     char option;
-    cout << "-------PASSWORD MANAGER-------\n";
+    cout << "-------LOCKIE - PASSWORD MANAGER-------\n";
     cout << "1.Add\n2.Edit\n3.Search\n4.Display all\n5.Delete\n6.Clear "
             "ALL\nEnter Q to QUIT\n";
     cout << "Enter: ";
