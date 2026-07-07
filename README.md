@@ -70,6 +70,7 @@ cd build
 cmake ..
 make
 sudo make install
+cd
 
 ```
 
@@ -83,6 +84,7 @@ cd build
 cmake ..
 make
 sudo make install
+cd
 
 ```
 
