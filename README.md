@@ -1,13 +1,42 @@
 # Lockie – A Simple C++ Password Manager
 
 A lightweight command-line password manager built in C++ for linux.
-Theres a menu driven option and direct Command option
 
 ---
 
-### Preview for menu driven option
+---
 
-![menu preview](images/preview.png)
+# How to use:
+
+There is a menu driven approach or direct command approach.
+Users can use it whatever way they are comfortable
+
+## open menu
+
+just enter
+
+```
+lockie
+```
+
+and you will enter the menu mode
+
+### preview
+
+![Project preview](images/preview.png)
+
+## Command mode
+
+| Commands                                                     | Description                |
+| ------------------------------------------------------------ | -------------------------- |
+| `lockie add <website> <username> <password>` or `lockie add` | Add a new password entry   |
+| `lockie search <website>`                                    | Search for a website       |
+| `lockie edit <website>`                                      | Modify an existing entry   |
+| `lockie delete <website>`                                    | Delete a specific entry    |
+| `lockie clearall`                                            | Delete every stored entry  |
+| `lockie listall`                                             | Display every stored entry |
+
+---
 
 ## Branches
 
@@ -152,36 +181,6 @@ Run:
 ```bash
 lockie
 ```
-
----
-
-# How to use:
-
-There is a menu driven approach or direct command approach.
-Users can use it whatever way they are comfortable
-
-## open menu
-
-just enter
-
-```
-lockie
-```
-
-and you will enter the menu mode
-
-## Command mode
-
-| Commands                                                     | Description                |
-| ------------------------------------------------------------ | -------------------------- |
-| `lockie add <website> <username> <password>` or `lockie add` | Add a new password entry   |
-| `lockie search <website>`                                    | Search for a website       |
-| `lockie edit <website>`                                      | Modify an existing entry   |
-| `lockie delete <website>`                                    | Delete a specific entry    |
-| `lockie clearall`                                            | Delete every stored entry  |
-| `lockie listall`                                             | Display every stored entry |
-
----
 
 # Reporting Bugs
 
