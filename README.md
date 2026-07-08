@@ -4,6 +4,10 @@ A lightweight command-line password manager built in C++ for linux.
 
 ---
 
+## Preview
+
+![menu preview](images/preview.png)
+
 ## Branches
 
 This repository contains two versions of Lockie:
