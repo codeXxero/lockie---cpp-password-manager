@@ -1,10 +1,11 @@
 # Lockie – A Simple C++ Password Manager
 
 A lightweight command-line password manager built in C++ for linux.
+Theres a menu driven option and direct Command option
 
 ---
 
-## Preview
+### Preview for menu driven option
 
 ![menu preview](images/preview.png)
 
