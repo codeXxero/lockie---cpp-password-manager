@@ -48,7 +48,9 @@ int main(int argc, char *argv[]) {
         passfunction.show_all();
       else if (command == "changemasterkey")
         change_masterkey();
-      else
+      else if (command == "add") {
+        passfunction.add_details();
+      } else
         cout << "invalid command\n";
     } else {
       cout << "invalid command\n";
