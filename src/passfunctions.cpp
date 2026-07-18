@@ -1,5 +1,7 @@
 #include "passfunctions.h"
 #include "crypto.h"
+#include <cstdlib>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -7,15 +9,30 @@
 #include <string>
 #include <vector>
 
+std::string storage_Path() {
+  const char *home = std::getenv("HOME");
+
+  std::filesystem::path dir =
+      std::filesystem::path(home) / ".local" / "share" / "lockie";
+
+  std::filesystem::create_directories(dir);
+
+  return dir.string();
+}
+std::string KeyPath() { return storage_Path() + "/key.dat"; }
+
+std::string VaultPath() { return storage_Path() + "/vault.dat"; }
+std::string saltpath() { return storage_Path() + "/salt.dat"; }
+
 void password_functions::saveSalt() {
-  std::ofstream file("salt.dat", std::ios::binary | std::ios::trunc);
+  std::ofstream file(saltpath(), std::ios::binary | std::ios::trunc);
   if (!file)
     throw std::runtime_error("Failed to save salt");
   file.write(reinterpret_cast<const char *>(salt), sizeof(salt));
 }
 
 void password_functions::loadSalt() {
-  std::ifstream file("salt.dat", std::ios::binary);
+  std::ifstream file(saltpath(), std::ios::binary);
   if (!file) {
     randombytes_buf(salt, sizeof(salt));
     saveSalt();
@@ -37,7 +54,7 @@ void password_functions::deriveKey(const std::string &masterpassword) {
 
 void password_functions::save_details() {
   if (vault.empty()) {
-    std::ofstream file("samp.DAT", std::ios::binary | std::ios::trunc);
+    std::ofstream file(VaultPath(), std::ios::binary | std::ios::trunc);
     return;
   }
 
@@ -50,7 +67,7 @@ void password_functions::save_details() {
 
   auto encrypted = Crypto::encrypt(plaintext, derived_key);
 
-  std::ofstream file("samp.DAT", std::ios::binary | std::ios::trunc);
+  std::ofstream file(VaultPath(), std::ios::binary | std::ios::trunc);
   if (!file.is_open())
     throw std::runtime_error("Failed to open file for writing");
 
@@ -63,9 +80,9 @@ void password_functions::save_details() {
 
 void password_functions::load_details() {
   vault.clear();
-  std::ifstream file("samp.DAT", std::ios::binary);
+  std::ifstream file(VaultPath(), std::ios::binary);
   if (!file) {
-    std::ofstream create("samp.DAT", std::ios::binary);
+    std::ofstream create(VaultPath(), std::ios::binary);
     return;
   }
 
@@ -329,7 +346,7 @@ selection:
 }
 
 void set_masterkey() {
-  std::ofstream file("key.txt");
+  std::ofstream file(KeyPath());
   if (!file) {
     std::cerr << "Error creating masterkey file\n";
     return;
@@ -349,7 +366,7 @@ void set_masterkey() {
 }
 
 std::string readKey_file() {
-  std::ifstream file("key.txt");
+  std::ifstream file(KeyPath());
   if (!file)
     return "";
   std::string storedHash;
@@ -368,7 +385,7 @@ int verify_masterkey(const std::string &storedHash,
 // Returns 0 = success, 1 = wrong key, 2 = first run
 // userKeyOut is set to the raw key on success (used for deriveKey)
 int verify_entry(std::string &userKeyOut) {
-  std::ifstream file("key.txt");
+  std::ifstream file(KeyPath());
   if (!file || file.peek() == std::ifstream::traits_type::eof()) {
     set_masterkey();
     std::cout << "Master key created. Restart the program\n";
@@ -404,7 +421,7 @@ void change_masterkey() {
                         crypto_pwhash_MEMLIMIT_INTERACTIVE) != 0)
     throw std::runtime_error("Hashing failed (out of memory)");
 
-  std::ofstream file("key.txt", std::ios::trunc);
+  std::ofstream file(KeyPath(), std::ios::trunc);
   if (!file) {
     std::cerr << "Error opening masterkey file\n";
     return;
