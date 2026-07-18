@@ -4,6 +4,7 @@
 #include <sodium.h>
 #include <string>
 #include <vector>
+
 void password_functions::add_CLI(std::string site, std::string username,
                                  std::string password) {
   Details d1(site, username, password);
