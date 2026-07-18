@@ -1,9 +1,24 @@
 #include "passfunctions.h"
+#include <cstdlib>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sodium.h>
 #include <string>
 #include <vector>
+std::string storage_Path() {
+  const char *home = std::getenv("HOME");
+
+  std::filesystem::path dir =
+      std::filesystem::path(home) / ".local" / "share" / "lockie";
+
+  std::filesystem::create_directories(dir);
+
+  return dir.string();
+}
+std::string KeyPath() { return storage_Path() + "/key.dat"; }
+
+std::string vaultPath() { return storage_Path() + "/vault.dat"; }
 void password_functions::add_CLI(std::string site, std::string username,
                                  std::string password) {
   Details d1(site, username, password);
@@ -86,7 +101,7 @@ selection:
 
 void password_functions::save_details() {
 
-  std::ofstream file{"samp.DAT"};
+  std::ofstream file{vaultPath()};
   if (!file) {
     std::cerr << "error saving details\n";
     return;
@@ -120,9 +135,9 @@ void password_functions::add_details() {
 }
 void password_functions::load_details() {
   vault.clear();
-  std::ifstream file("samp.DAT");
+  std::ifstream file(vaultPath());
   if (!file) {
-    std::ofstream create("samp.DAT");
+    std::ofstream create(vaultPath());
     return;
   }
   std::string site;
@@ -285,7 +300,7 @@ selection:
   return match[choice - 1];
 }
 void set_masterkey() {
-  std::ofstream file("key.DAT");
+  std::ofstream file(KeyPath());
 
   if (!file) {
     std::cerr << "Error creating masterkey file\n";
@@ -310,7 +325,7 @@ void set_masterkey() {
 }
 
 std::string readKey_file() {
-  std::ifstream file("key.DAT");
+  std::ifstream file(KeyPath());
 
   if (!file) {
     return "file empty";
@@ -331,7 +346,7 @@ int verify_masterkey(const std::string &storedHash,
 }
 
 int verify_entry() {
-  std::ifstream file("key.DAT");
+  std::ifstream file(KeyPath());
 
   if (!file || file.peek() == std::ifstream::traits_type::eof()) {
     set_masterkey();
@@ -372,7 +387,7 @@ void change_masterkey() {
     return;
   }
 
-  std::ofstream file("key.txt", std::ios::trunc);
+  std::ofstream file(KeyPath(), std::ios::trunc);
   if (!file) {
     std::cerr << "Error opening masterkey file\n";
     return;
